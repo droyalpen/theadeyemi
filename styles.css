@@ -1325,3 +1325,200 @@ button:focus-visible {
     transition: none;
   }
 }
+
+/* CONSOLIDATED CAROUSEL OVERRIDES
+   These final rules take precedence over the earlier grid declarations. */
+.expertise-slider,
+.projects-slider {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.expertise-track,
+.projects-track {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 8px 2px 18px;
+  touch-action: pan-x pan-y;
+}
+
+.expertise-track::-webkit-scrollbar,
+.projects-track::-webkit-scrollbar {
+  display: none;
+}
+
+.expertise-track .expertise-card,
+.projects-track .project-card {
+  flex: 0 0 calc((100% - 48px) / 3);
+  min-width: 0;
+  height: auto;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+}
+
+.expertise-controls,
+.projects-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.slider-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(128, 128, 128, .35);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.slider-arrow:hover:not(:disabled) {
+  background: var(--blue-dark, #3d61ce);
+  color: #fff;
+  border-color: var(--blue-dark, #3d61ce);
+}
+
+.slider-arrow:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.slider-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider-divider {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+  opacity: .35;
+}
+
+.slider-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+
+.slider-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: .25;
+  cursor: pointer;
+  transition: width .2s ease, opacity .2s ease;
+}
+
+.slider-dot.active {
+  width: 23px;
+  opacity: 1;
+  background: var(--blue-dark, #3d61ce);
+}
+
+.slider-dot:focus-visible {
+  outline: 2px solid var(--blue-dark, #3d61ce);
+  outline-offset: 4px;
+}
+
+/* Tablet: two cards visible */
+@media (max-width: 1000px) {
+  .expertise-track .expertise-card,
+  .projects-track .project-card {
+    flex-basis: calc((100% - 24px) / 2);
+  }
+}
+
+/* Mobile: one card visible */
+@media (max-width: 760px) {
+  .expertise-track,
+  .projects-track {
+    gap: 16px;
+    padding-inline: 1px;
+  }
+
+  .expertise-track .expertise-card,
+  .projects-track .project-card {
+    flex-basis: 100%;
+  }
+
+  .expertise-controls,
+  .projects-controls {
+    gap: 12px;
+  }
+
+  .slider-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .slider-status {
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .slider-divider {
+    width: 16px;
+  }
+
+  .slider-dots {
+    gap: 5px;
+  }
+
+  .slider-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .slider-dot.active {
+    width: 18px;
+  }
+
+  /* Grid declarations from the original stylesheet must not override the carousel. */
+  .expertise-grid,
+  .projects-grid {
+    display: block;
+  }
+}
+
+@media (max-width: 390px) {
+  .slider-status { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expertise-track,
+  .projects-track { scroll-behavior: auto; }
+
+  .expertise-card,
+  .project-card,
+  .slider-arrow,
+  .slider-dot { transition: none; }
+}
