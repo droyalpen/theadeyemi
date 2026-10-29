@@ -45,3 +45,107 @@ if (copyButton) {
     }
   });
 }
+
+/* EXPERTISE SLIDER */
+(() => {
+  const track = document.getElementById("expertiseTrack");
+  const previous = document.getElementById("expertisePrev");
+  const next = document.getElementById("expertiseNext");
+  const current = document.getElementById("expertiseCurrent");
+  const dotsContainer = document.getElementById("expertiseDots");
+
+  if (!track || !previous || !next || !current || !dotsContainer) {
+    return;
+  }
+
+  const cards = Array.from(
+    track.querySelectorAll(".expertise-card")
+  );
+
+  if (!cards.length) return;
+
+  let activeIndex = 0;
+  const dots = [];
+
+  cards.forEach((card, index) => {
+    const dot = document.createElement("button");
+
+    dot.type = "button";
+    dot.className = "slider-dot";
+    dot.setAttribute(
+      "aria-label",
+      `Go to expertise card ${index + 1}`
+    );
+
+    dot.addEventListener("click", () => {
+      goToCard(index);
+    });
+
+    dotsContainer.appendChild(dot);
+    dots.push(dot);
+  });
+
+  function goToCard(index) {
+    activeIndex = Math.max(0, Math.min(index, cards.length - 1));
+
+    cards[activeIndex].scrollIntoView({
+      behavior: window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches ? "auto" : "smooth",
+      block: "nearest",
+      inline: "start"
+    });
+
+    updateControls();
+  }
+
+  function updateControls() {
+    current.textContent = String(activeIndex + 1).padStart(2, "0");
+
+    previous.disabled = activeIndex === 0;
+    next.disabled = activeIndex === cards.length - 1;
+
+    dots.forEach((dot, index) => {
+      const isActive = index === activeIndex;
+
+      dot.classList.toggle("active", isActive);
+
+      if (isActive) {
+        dot.setAttribute("aria-current", "step");
+      } else {
+        dot.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  previous.addEventListener("click", () => {
+    goToCard(activeIndex - 1);
+  });
+
+  next.addEventListener("click", () => {
+    goToCard(activeIndex + 1);
+  });
+
+  track.addEventListener("scroll", () => {
+    const trackLeft = track.getBoundingClientRect().left;
+
+    let closestIndex = 0;
+    let smallestDistance = Infinity;
+
+    cards.forEach((card, index) => {
+      const distance = Math.abs(
+        card.getBoundingClientRect().left - trackLeft
+      );
+
+      if (distance < smallestDistance) {
+        smallestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    activeIndex = closestIndex;
+    updateControls();
+  }, { passive: true });
+
+  updateControls();
+})();
